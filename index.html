@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI Example Page</title>
+	<link href="jquery-ui.css" rel="stylesheet">
+	<style type="text/css">
+
+	body {
+		text-align: center;
+	}
+
+	#dropZone { 
+		width: 1000px;
+		height: 900px;
+		border: 1px solid black;
+		margin: auto;
+	}
+
+	.match {
+		margin-top: 5px;
+		border: 1px solid black;
+		background: #e0e0e0;
+		width: 100px;
+		height: 62px;
+		cursor: move;
+	}
+
+	.match .team {
+		height: 20px;
+		border-top: 1px solid black;
+		padding: 5px;
+		text-align: center;
+	}
+
+	.rightBracket {
+		border-top: 5px solid black;
+		border-bottom: 5px solid black;
+		border-right: 5px solid black;
+		width: 100px;
+		height: 100px;
+	}
+
+	.leftBracket {
+		border-top: 5px solid black;
+		border-bottom: 5px solid black;
+		border-left: 5px solid black;
+		width: 100px;
+		height: 100px;
+	}
+
+	.horizontal-line {
+		/*border-top: 1px solid black;*/
+		width: 100px;
+		height: 5px;
+		cursor: move;
+		background: black;
+	}
+	.vertical-line {
+		/*border-right: 1px solid black;*/
+		width: 5px;
+		height: 100px;
+		cursor: move;
+		background: black;
+	}
+
+	#preview {
+		width: 1000px;
+		height: 900px;
+		border: 1px solid black;
+		margin: auto;
+	}
+
+	.line {
+		margin-bottom: 10px;
+	}
+	</style>
+</head>
+<body>
+
+
+
+<h1>Tournament Builder</h1>
+
+<button id="addMatch">Add Match</button>
+<button id="addLeftBracket">Add Left Bracket</button>
+<button id="addRightBracket">Add Right Bracket</button>
+<button id="addHLine">Add Horizontal Line</button>
+<button id="addVLine">Add Vertical Line</button>
+<button id="save">Save Bracket</button>
+<button id="load">Load Preview</button>
+
+<div id="dropZone">
+</div>
+
+
+<h2>Preview Tournament: </h2>
+<div id="preview">
+</div>
+
+<div id="matchDialog" title="Match details">
+	<div class="line">
+		Away team: <select>
+			<option value="1">Team 1</option>
+			<option value="2">Team 2</option>
+			<option value="3">Team 3</option>
+			<option value="4">Team 4</option>
+		</select>
+	</div>
+
+	<div class="line">
+		Home team: <select>
+			<option value="1">Team 1</option>
+			<option value="2">Team 2</option>
+			<option value="3">Team 3</option>
+			<option value="4">Team 4</option>
+		</select>
+	</div>
+	<div class="line">
+		Location: <input type="text">
+	</div>
+	<div class="line">Date & Time: <input type="text" id="matchDate"></div>
+</div>
+
+<script src="external/jquery/jquery.js"></script>
+<script src="jquery-ui.js"></script>
+<script>
+	window.savedDom = "";
+	$(function() {	
+			$("#matchDate").datepicker();
+
+			$( "#matchDialog" ).dialog({
+      			autoOpen: false,
+      			buttons: {
+			    	"Save": function() {
+			        	$( this ).dialog( "close" );
+			        },
+			        Cancel: function() {
+			          $( this ).dialog( "close" );
+			        }
+			      }
+    		});
+
+			$("#dropZone").on("dblclick", ".match", function () {
+				$( "#matchDialog" ).dialog( "open" );
+			});
+
+			$("#addMatch").click(function() {
+				$("#dropZone").append("<div class=\"match\"><div class=\"team\">Team 1</div><div class=\"team\">Team 2</div></div>");
+				$(".match").draggable({ containment: "parent" });
+			});
+
+			$("#addLeftBracket").click(function() {
+				$("#dropZone").append("<div class=\"leftBracket\"></div>");
+				$(".leftBracket").resizable();
+				$(".leftBracket").draggable({ containment: "parent" });
+			});
+
+			$("#addRightBracket").click(function() {
+				$("#dropZone").append("<div class=\"rightBracket\"></div>");
+				$(".rightBracket").resizable();
+				$(".rightBracket").draggable({ containment: "parent" });
+			});
+
+			$("#addHLine").click(function() {
+				$("#dropZone").append("<div class=\"horizontal-line\"></div>");
+				$(".horizontal-line").resizable({/*minHeight: 30, maxHeight: 30, */handles: "e"});
+				$(".horizontal-line").draggable({ containment: "parent" });
+			});
+
+			$("#addVLine").click(function() {
+				$("#dropZone").append("<div class=\"vertical-line\"></div>");
+				$(".vertical-line").resizable({/*minWidth: 30, maxWidth: 30, */handles: "s"});
+				$(".vertical-line").draggable({ containment: "parent" });
+			});
+
+			$("#save").click(function() {
+				window.savedDom = encodeURI($("#dropZone").html());
+				console.log(window.savedDom);
+			});
+
+			$("#load").click(function() {
+				$("#preview").html(decodeURI(window.savedDom));
+				console.log(decodeURI(window.savedDom));
+			});
+
+		$(".match").draggable({ containment: "parent" });
+	});
+</script>
+</body>
+</html>
